@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+  <style>
+      body{
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;;
+      }
+      ul{
+        list-style-type: none;
+        border: 1px solid grey;
+      }
+      li{
+        border: 1px dashed grey;
+        list-style: none;
+        /*margin: 3px;*/
+        /*background:grey;*/
+      }
+      /*div{
+
+        width: 20%;
+      }*/
+      form{
+        text-align: left;
+      }
+      input, select, button{
+        margin-top: 5px;
+      }
+      table {
+          margin-top: 10px;
+          font-family: arial, sans-serif;
+          border-collapse: collapse;
+          width: 50%;
+      }
+
+      td, th {
+          border: 1px solid #dddddd;
+          text-align: left;
+          padding: 8px;
+      }
+
+      tr:nth-child(even) {
+          background-color: #dddddd;
+      }
+
+  </style>
+<body>
+    <div><h2>Expense Manager:</h2></div>
+
+    <form name="myForm" id="expenseForm">
+      <fieldset>
+        <legend>New Expense:</legend>
+        Amount:<br>
+        <input type="text" name="Amount" value="">
+        <br>
+        Date:<br>
+        <input type="date" name="Date" value="2018-02-20">
+        <br>
+        Category:<br>
+        <select name="Category">
+          <option value="Food">Food</option>
+          <option value="Travel">Travel</option>
+          <option value="Movie">Movie</option>
+          <option value="Exam Fee">Exam Fee</option>
+        </select>
+        <br>
+        Note:<br>
+        <input type="text" name="Note" value="">
+        <br>
+        <button type="button" onclick="addElement()">Add</button>
+        <!-- <input type="submit" value="Submit" onclick="addElement()"> -->
+      </fieldset>
+    </form>
+    <table id="expenseTable"></table>
+
+    <script>
+        var fruits, text, fLen, i;
+
+        expense = [
+          {id:"1", amount:"120", date:"2018-02-20", category:"Food", note:"Dinner"},
+          {id:"2", amount:"200", date:"2018-02-20", category:"Travel", note:"Bus Ticket"},
+          {id:"3", amount:"100", date:"2018-02-20", category:"Movie", note:"Queen"}
+        ];
+        renderList();
+        function renderList(){
+            text = "<tr><th>Amount</th><th>Date</th><th>Category</th> <th>Note</th></tr>";
+            fLen = expense.length;
+            for (i = 0; i < fLen; i++) {
+                text += "<tr>"+"<td>"+expense[i].id+"</td>"+"<td>" + expense[i].amount + "</td>"+"<td>" + expense[i].date + "</td>"+"<td>" + expense[i].category + "</td>"+"<td>"+ expense[i].note + "</td>"+"<td><button onclick="deleteElement()">Delete</button></td>"+"</tr>";
+            }
+
+            document.getElementById("expenseTable").innerHTML = text;
+            console.log(expense);
+        }
+        function addElement(){
+          var item = {amount:document.forms["myForm"]["Amount"].value, date:document.forms["myForm"]["Date"].value, category:document.forms["myForm"]["Category"].value, note:document.forms["myForm"]["Note"].value};
+          expense.push(item);
+          console.log(document.forms["myForm"]["Note"].value);
+          renderList();
+        }
+        function deleteElement(){
+          expense = expense.filter((expense)=>thi)
+        }
+
+    </script>
+</body>
+</html>
