@@ -76,34 +76,43 @@
     <table id="expenseTable"></table>
 
     <script>
-        var fruits, text, fLen, i;
-
+        var fruits, text, fLen, i, count;
+        count=4;
         expense = [
-          {id:"1", amount:"120", date:"2018-02-20", category:"Food", note:"Dinner"},
-          {id:"2", amount:"200", date:"2018-02-20", category:"Travel", note:"Bus Ticket"},
-          {id:"3", amount:"100", date:"2018-02-20", category:"Movie", note:"Queen"}
+          {id:1, amount:"120", date:"2018-02-20", category:"Food", note:"Dinner"},
+          {id:2, amount:"200", date:"2018-02-20", category:"Travel", note:"Bus Ticket"},
+          {id:3, amount:"100", date:"2018-02-20", category:"Movie", note:"Queen"}
         ];
         renderList();
         function renderList(){
-            text = "<tr><th>Amount</th><th>Date</th><th>Category</th> <th>Note</th></tr>";
-            fLen = expense.length;
+            text = "<tr><th>Id</th><th>Amount</th><th>Date</th><th>Category</th> <th>Note</th></tr>";
+            fLen = expense.length;console.log(fLen);
             for (i = 0; i < fLen; i++) {
-                text += "<tr>"+"<td>"+expense[i].id+"</td>"+"<td>" + expense[i].amount + "</td>"+"<td>" + expense[i].date + "</td>"+"<td>" + expense[i].category + "</td>"+"<td>"+ expense[i].note + "</td>"+"<td><button onclick="deleteElement()">Delete</button></td>"+"</tr>";
+                console.log(expense[i].id);
+                 text += "<tr>"+"<td>" + expense[i].id + "</td>"+"<td>" + expense[i].amount + "</td>"+"<td>" + expense[i].date + "</td>"+"<td>" + expense[i].category + "</td>"+"<td>"+ expense[i].note + "</td>"+"<td><button key="+expense[i].id+" onclick=deleteElement(this)>Delete</button></td>"+"</tr>";
             }
 
             document.getElementById("expenseTable").innerHTML = text;
             console.log(expense);
         }
         function addElement(){
-          var item = {amount:document.forms["myForm"]["Amount"].value, date:document.forms["myForm"]["Date"].value, category:document.forms["myForm"]["Category"].value, note:document.forms["myForm"]["Note"].value};
+          var item = {id:count, amount:document.forms["myForm"]["Amount"].value, date:document.forms["myForm"]["Date"].value, category:document.forms["myForm"]["Category"].value, note:document.forms["myForm"]["Note"].value};
+          count++;
           expense.push(item);
           console.log(document.forms["myForm"]["Note"].value);
           renderList();
         }
-        function deleteElement(){
-          expense = expense.filter((expense)=>thi)
+        function deleteElement(id){
+          var key;
+          window.alert("key="+id.getAttribute("key"));
+          key=id.getAttribute("key");
+          console.log(key);
+          expense = expense.filter((expense)=> {if (expense.id != key) {
+            return expense;
+          }});
+          console.log(expense);
+          renderList();
         }
-
     </script>
 </body>
 </html>
