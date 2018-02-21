@@ -24,6 +24,7 @@
       }*/
       form{
         text-align: left;
+        background: rgba(230, 227, 220, 0.78);
       }
       input, select, button{
         margin-top: 5px;
@@ -44,7 +45,17 @@
       tr:nth-child(even) {
           background-color: #dddddd;
       }
-
+      button{
+        border: none;
+        background: #e8bcbc;
+        border-radius: 2px;
+      }
+      button:hover{
+        transition: 1s ease;
+        background: #8e1515;
+        color: white;
+        border: none;
+      }
   </style>
 <body>
     <div><h2>Expense Manager:</h2></div>
@@ -83,34 +94,69 @@
           {id:2, amount:"200", date:"2018-02-20", category:"Travel", note:"Bus Ticket"},
           {id:3, amount:"100", date:"2018-02-20", category:"Movie", note:"Queen"}
         ];
+
+        //checking wether the localStorage doesnot contain the expense data and storing if not.
+
+        if(! localStorage.getItem("expenses")){
+          var string = JSON.stringify(expense);
+          localStorage.setItem("expenses",string);
+        }
+
+        //to display the list of elements in expense array..
         renderList();
+
+        //function for displaying the list
         function renderList(){
+
+            //getting expense array from localStorage
+            string= localStorage.getItem("expenses");
+            expense= JSON.parse(string);
+
             text = "<tr><th>Id</th><th>Amount</th><th>Date</th><th>Category</th> <th>Note</th></tr>";
             fLen = expense.length;console.log(fLen);
+
             for (i = 0; i < fLen; i++) {
-                console.log(expense[i].id);
-                 text += "<tr>"+"<td>" + expense[i].id + "</td>"+"<td>" + expense[i].amount + "</td>"+"<td>" + expense[i].date + "</td>"+"<td>" + expense[i].category + "</td>"+"<td>"+ expense[i].note + "</td>"+"<td><button key="+expense[i].id+" onclick=deleteElement(this)>Delete</button></td>"+"</tr>";
+              console.log(expense[i].id);
+              text += "<tr>"+"<td>" + expense[i].id + "</td>"+"<td>" + expense[i].amount + "</td>"+"<td>" + expense[i].date + "</td>"+"<td>" + expense[i].category + "</td>"+"<td>"+ expense[i].note + "</td>"+"<td><button key="+expense[i].id+" onclick=deleteElement(this)>Delete</button></td>"+"</tr>";
             }
 
             document.getElementById("expenseTable").innerHTML = text;
             console.log(expense);
         }
+
+        //function for adding new expense data
         function addElement(){
           var item = {id:count, amount:document.forms["myForm"]["Amount"].value, date:document.forms["myForm"]["Date"].value, category:document.forms["myForm"]["Category"].value, note:document.forms["myForm"]["Note"].value};
           count++;
           expense.push(item);
-          console.log(document.forms["myForm"]["Note"].value);
+
+          //storing the updated array to localStorage
+          var string = JSON.stringify(expense);
+          localStorage.setItem("expenses",string);
+
+          //to display the updated list
           renderList();
         }
-        function deleteElement(id){
+
+        //function for deleting an item from expense list
+        function deleteElement(row){
           var key;
-          window.alert("key="+id.getAttribute("key"));
-          key=id.getAttribute("key");
+          // window.alert("key="+id.getAttribute("key"));
+          //id of element to be deleted
+          key=row.getAttribute("key");
           console.log(key);
+
+          //updating the array by removing the element whose id = key(id of element to be deleted)
           expense = expense.filter((expense)=> {if (expense.id != key) {
             return expense;
           }});
+
+          //storing the updated array to localStorage
+          var string = JSON.stringify(expense);
+          localStorage.setItem("expenses",string);
+
           console.log(expense);
+          //displaying updated list
           renderList();
         }
     </script>
