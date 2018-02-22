@@ -1,6 +1,10 @@
 <!DOCTYPE html>
 <html>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
   <style>
+
       body{
         text-align: center;
         display: flex;
@@ -8,22 +12,11 @@
         justify-content: center;
         align-items: center;;
       }
-      ul{
-        list-style-type: none;
-        border: 1px solid grey;
-      }
-      li{
-        border: 1px dashed grey;
-        list-style: none;
-        /*margin: 3px;*/
-        /*background:grey;*/
-      }
-      /*div{
 
-        width: 20%;
-      }*/
       form{
-        text-align: left;
+        width: 100%;
+        padding: 10px;
+        text-align: center;
         background: rgba(230, 227, 220, 0.78);
       }
       input, select, button{
@@ -33,12 +26,12 @@
           margin-top: 10px;
           font-family: arial, sans-serif;
           border-collapse: collapse;
-          width: 50%;
+          width: 100%;
       }
 
       td, th {
           border: 1px solid #dddddd;
-          text-align: left;
+          text-align: center;
           padding: 8px;
       }
 
@@ -56,43 +49,88 @@
         color: white;
         border: none;
       }
+      .sort{
+        width: 200px;
+        border: 2px solid grey;
+        background: white;
+        color: black;
+      }
+      .sort:hover{
+        border: 2px solid grey;
+        background: grey;
+        color: white;
+      }
+      .options{
+        margin: 10px;
+        display: inline-block;
+        border: 1px solid grey;
+        padding: 0px 50px;
+        padding-bottom: 20px;
+      }
+      .navbar{
+        width: 100%;
+      }
   </style>
 <body>
+
+    <nav class="navbar navbar-default">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <a class="navbar-brand" href="#">ExpenseManager</a>
+        </div>
+        <ul class="nav navbar-nav">
+          <li class="active"><a href="#">Expense list</a></li>
+          <li><a href="#">Report</a></li>
+        </ul>
+      </div>
+    </nav>
+
     <div><h2>Expense Manager:</h2></div>
+    <div  class="container">
+      <form name="myForm" id="expenseForm">
+        <fieldset>
+          <legend>New Expense:</legend>
+          Amount:
+          <input type="number" name="Amount" value="">
 
-    <form name="myForm" id="expenseForm">
-      <fieldset>
-        <legend>New Expense:</legend>
-        Amount:<br>
-        <input type="text" name="Amount" value="">
-        <br>
-        Date:<br>
-        <input type="date" name="Date" value="2018-02-20">
-        <br>
-        Category:<br>
-        <select name="Category">
-          <option value="Food">Food</option>
-          <option value="Travel">Travel</option>
-          <option value="Movie">Movie</option>
-          <option value="Exam Fee">Exam Fee</option>
-        </select>
-        <br>
-        Note:<br>
-        <input type="text" name="Note" value="">
-        <br>
-        <button type="button" onclick="addElement()">Add</button>
-        <!-- <input type="submit" value="Submit" onclick="addElement()"> -->
-      </fieldset>
-    </form>
-    <table id="expenseTable"></table>
+          Date:
+          <input type="date" name="Date" value="2018-02-20">
 
+          Category:
+          <select name="Category">
+            <option value="Food">Food</option>
+            <option value="Travel">Travel</option>
+            <option value="Movie">Movie</option>
+            <option value="Exam Fee">Exam Fee</option>
+          </select>
+
+          Note:
+          <input type="text" name="Note" value="">
+
+          <button type="button" onclick="addElement()">Add</button>
+          <!-- <input type="submit" value="Submit" onclick="addElement()"> -->
+        </fieldset>
+      </form>
+    </div>
+    <div class="options">
+      <h3>Options:</h3>
+      <button class="sort" type="button" onclick="sortByDate()">Sort by Date</button>
+      <button class="sort" type="button" onclick="sortByAmount()">Sort by Amount</button>
+    </div>
+    <div>
+      <h3 id="total"></h3>
+      <h5 id="date"></h5>
+    </div>
+    <div class="container">
+      <table id="expenseTable"></table>
+    </div>
     <script>
         var fruits, text, fLen, i, count;
         count=4;
         expense = [
-          {id:1, amount:"120", date:"2018-02-20", category:"Food", note:"Dinner"},
-          {id:2, amount:"200", date:"2018-02-20", category:"Travel", note:"Bus Ticket"},
-          {id:3, amount:"100", date:"2018-02-20", category:"Movie", note:"Queen"}
+          {id:1, amount:120, date:"2018-02-20", category:"Food", note:"Dinner"},
+          {id:2, amount:200, date:"2018-02-20", category:"Travel", note:"Bus Ticket"},
+          {id:3, amount:100, date:"2018-02-20", category:"Movie", note:"Queen"}
         ];
 
         //checking wether the localStorage doesnot contain the expense data and storing if not.
@@ -107,26 +145,29 @@
 
         //function for displaying the list
         function renderList(){
-
+            total=0;
             //getting expense array from localStorage
             string= localStorage.getItem("expenses");
             expense= JSON.parse(string);
 
-            text = "<tr><th>Id</th><th>Amount</th><th>Date</th><th>Category</th> <th>Note</th></tr>";
+            text = "<tr><th>Id</th><th>Amount</th><th>Date</th><th>Category</th> <th>Note</th><th>...</th></tr>";
             fLen = expense.length;console.log(fLen);
 
             for (i = 0; i < fLen; i++) {
               console.log(expense[i].id);
               text += "<tr>"+"<td>" + expense[i].id + "</td>"+"<td>" + expense[i].amount + "</td>"+"<td>" + expense[i].date + "</td>"+"<td>" + expense[i].category + "</td>"+"<td>"+ expense[i].note + "</td>"+"<td><button key="+expense[i].id+" onclick=deleteElement(this)>Delete</button></td>"+"</tr>";
+              total+= Number(expense[i].amount);
             }
 
             document.getElementById("expenseTable").innerHTML = text;
-            console.log(expense);
+            document.getElementById("total").innerHTML = "Total Expense = "+total;
+            document.getElementById("date").innerHTML = "Date : "+Date();
+            console.log('expense='+total);
         }
 
         //function for adding new expense data
         function addElement(){
-          var item = {id:count, amount:document.forms["myForm"]["Amount"].value, date:document.forms["myForm"]["Date"].value, category:document.forms["myForm"]["Category"].value, note:document.forms["myForm"]["Note"].value};
+          var item = {id:count, amount:Number(document.forms["myForm"]["Amount"].value), date:document.forms["myForm"]["Date"].value, category:document.forms["myForm"]["Category"].value, note:document.forms["myForm"]["Note"].value};
           count++;
           expense.push(item);
 
@@ -137,7 +178,32 @@
           //to display the updated list
           renderList();
         }
-
+        function sortByDate(){
+          expense = expense.sort(function (a,b) {
+            if (a.date < b.date)
+              return -1;
+            if (a.date > b.date)
+              return 1;
+            return 0;
+          });
+          var string = JSON.stringify(expense);
+          localStorage.setItem("expenses",string);
+          console.log('sorted:'+expense);
+          renderList();
+        }
+        function sortByAmount(){
+          expense = expense.sort(function (a,b) {
+            if (a.amount < b.amount)
+              return -1;
+            if (a.amount > b.amount)
+              return 1;
+            return 0;
+          });
+          var string = JSON.stringify(expense);
+          localStorage.setItem("expenses",string);
+          console.log('sorted:'+expense);
+          renderList();
+        }
         //function for deleting an item from expense list
         function deleteElement(row){
           var key;
