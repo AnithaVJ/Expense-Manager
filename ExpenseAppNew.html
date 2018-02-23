@@ -69,6 +69,7 @@
       }
       .navbar{
         width: 100%;
+        background: #eee;
       }
   </style>
 <body>
@@ -80,7 +81,7 @@
         </div>
         <ul class="nav navbar-nav">
           <li class="active"><a href="#">Expense list</a></li>
-          <li><a href="#">Report</a></li>
+          <li><a href="./Report.html">Report</a></li>
         </ul>
       </div>
     </nav>
@@ -126,7 +127,7 @@
     </div>
     <script>
         var fruits, text, fLen, i, count;
-        count=4;
+        count = localStorage.getItem('count');
         expense = [
           {id:1, amount:120, date:"2018-02-20", category:"Food", note:"Dinner"},
           {id:2, amount:200, date:"2018-02-20", category:"Travel", note:"Bus Ticket"},
@@ -136,6 +137,7 @@
         //checking wether the localStorage doesnot contain the expense data and storing if not.
 
         if(! localStorage.getItem("expenses")){
+          count = 4;
           var string = JSON.stringify(expense);
           localStorage.setItem("expenses",string);
         }
@@ -167,8 +169,10 @@
 
         //function for adding new expense data
         function addElement(){
+
           var item = {id:count, amount:Number(document.forms["myForm"]["Amount"].value), date:document.forms["myForm"]["Date"].value, category:document.forms["myForm"]["Category"].value, note:document.forms["myForm"]["Note"].value};
           count++;
+          localStorage.setItem('count',count);
           expense.push(item);
 
           //storing the updated array to localStorage
