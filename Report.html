@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <style>
+
+      body{
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;;
+      }
+
+      form{
+        width: 100%;
+        padding: 10px;
+        text-align: center;
+        background: rgba(230, 227, 220, 0.78);
+      }
+      input, select, button{
+        margin-top: 5px;
+      }
+      table {
+          margin-top: 10px;
+          font-family: arial, sans-serif;
+          border-collapse: collapse;
+          width: 100%;
+      }
+
+      td, th {
+          border: 1px solid #dddddd;
+          text-align: center;
+          padding: 8px;
+      }
+
+      tr:nth-child(even) {
+          background-color: #dddddd;
+      }
+      button{
+        border: none;
+        background: #e8bcbc;
+        border-radius: 2px;
+      }
+      button:hover{
+        transition: 1s ease;
+        background: #8e1515;
+        color: white;
+        border: none;
+      }
+      .sort{
+        width: 200px;
+        border: 2px solid grey;
+        background: white;
+        color: black;
+      }
+      .sort:hover{
+        border: 2px solid grey;
+        background: grey;
+        color: white;
+      }
+      .options{
+        margin: 10px;
+        display: inline-block;
+        border: 1px solid grey;
+        padding: 0px 50px;
+        padding-bottom: 20px;
+      }
+      .navbar{
+        width: 100%;
+        background: #eee;
+      }
+  </style>
+<body>
+
+    <nav class="navbar navbar-default">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <a class="navbar-brand" href="#">ExpenseManager</a>
+        </div>
+        <ul class="nav navbar-nav">
+          <li ><a href="./ExpenseAppNew.html">Expense list</a></li>
+          <li class="active"><a href="#">Report</a></li>
+        </ul>
+      </div>
+    </nav>
+
+    <div><h2>Report:</h2></div>
+    <div  class="container">
+      <form name="myForm" id="expenseForm">
+        <fieldset>
+
+          From:
+          <input type="date" name="startDate" >
+
+          to:
+          <input type="date" name="endDate" >
+
+          Category:
+          <select name="Category">
+            <option value="Food">Food</option>
+            <option value="Travel">Travel</option>
+            <option value="Movie">Movie</option>
+            <option value="Exam Fee">Exam Fee</option>
+          </select>
+
+          <button type="button" onclick="renderList()">Get Report</button>
+          <!-- <input type="submit" value="Submit" onclick="addElement()"> -->
+        </fieldset>
+      </form>
+    </div>
+    <div class="options">
+      <h3>Options:</h3>
+      <button class="sort" type="button" onclick="sortByDate()">Sort by Date</button>
+      <button class="sort" type="button" onclick="sortByAmount()">Sort by Amount</button>
+    </div>
+    <div>
+      <h3 id="total"></h3>
+      <h5 id="date"></h5>
+    </div>
+    <div class="container">
+      <table id="expenseTable"></table>
+    </div>
+    <script>
+        var fruits, text, fLen, i, count;
+        // count=4;
+        // expense = [
+        //   {id:1, amount:120, date:"2018-02-20", category:"Food", note:"Dinner"},
+        //   {id:2, amount:200, date:"2018-02-20", category:"Travel", note:"Bus Ticket"},
+        //   {id:3, amount:100, date:"2018-02-20", category:"Movie", note:"Queen"}
+        // ];
+
+        //checking wether the localStorage doesnot contain the expense data and storing if not.
+
+        if(! localStorage.getItem("expenses")){
+          window.alert('There is nothing in the Expense list..!!')
+        }
+
+
+        //function for displaying the list
+        function renderList(){
+            total=0;
+            //getting expense array from localStorage
+            string= localStorage.getItem("expenses");
+            expense= JSON.parse(string);
+
+            var category= document.forms["myForm"]["Category"].value;
+            var startDate= document.forms["myForm"]["startDate"].value;
+            var endDate= document.forms["myForm"]["endDate"].value;
+            expense = expense.filter((expense)=> {if (expense.date >= startDate && expense.date <= endDate && expense.category == category) {
+              return expense;
+            }});
+
+            text = "<tr><th>Id</th><th>Amount</th><th>Date</th><th>Category</th> <th>Note</th></tr>";
+            fLen = expense.length;console.log(fLen);
+
+            for (i = 0; i < fLen; i++) {
+              console.log(expense[i].id);
+              text += "<tr>"+"<td>" + expense[i].id + "</td>"+"<td>" + expense[i].amount + "</td>"+"<td>" + expense[i].date + "</td>"+"<td>" + expense[i].category + "</td>"+"<td>"+ expense[i].note + "</td>"+"</tr>";
+              total+= Number(expense[i].amount);
+            }
+
+            document.getElementById("expenseTable").innerHTML = text;
+            document.getElementById("total").innerHTML = "Total Expense = "+total;
+            document.getElementById("date").innerHTML = "Date : "+Date();
+            console.log('expense='+total);
+        }
+
+
+        function sortByDate(){
+          expense = expense.sort(function (a,b) {
+            if (a.date < b.date)
+              return -1;
+            if (a.date > b.date)
+              return 1;
+            return 0;
+          });
+          var string = JSON.stringify(expense);
+          localStorage.setItem("expenses",string);
+          console.log('sorted:'+expense);
+          renderList();
+        }
+        function sortByAmount(){
+          expense = expense.sort(function (a,b) {
+            if (a.amount < b.amount)
+              return -1;
+            if (a.amount > b.amount)
+              return 1;
+            return 0;
+          });
+          var string = JSON.stringify(expense);
+          localStorage.setItem("expenses",string);
+          console.log('sorted:'+expense);
+          renderList();
+        }
+
+    </script>
+</body>
+</html>
